@@ -6,9 +6,9 @@ A modern full-stack web application built with **Laravel** as the backend API an
 
 - **Backend:** Laravel
 - **Frontend:** React
-- **API Communication:** Axios / Fetch
-- **Authentication:** Laravel Sanctum / JWT
-- **Database:** MySQL / PostgreSQL
+- **API Communication:** Axios
+- **Authentication:** Laravel JWT
+- **Database:** MySQL
 
 ## ✨ Features
 
@@ -21,17 +21,17 @@ A modern full-stack web application built with **Laravel** as the backend API an
 ## 📂 Project Structure
 
 ```text
-backend/
-frontend/
+Laravel-App/
+React-App/
 ```
 
 ## ⚙️ Installation
 ### Backend (Laravel)
 
 ```text
-cd backend
+cd Laravel-App
 composer install
-cp .env.example .env
+cp .env
 php artisan key:generate
 php artisan migrate
 php artisan serve
@@ -40,7 +40,7 @@ php artisan serve
 ### Frontend (React)
 
 ```text
-cd frontend
+cd React-App
 npm install
 npm run dev
 ```
