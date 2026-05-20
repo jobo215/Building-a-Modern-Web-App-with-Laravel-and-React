@@ -12,10 +12,10 @@ import { EmailInput } from "../components/EmailInput";
 import { PasswordInput } from "../components/PasswordInput";
 import api from "../api/api";
 import { AxiosError, AxiosResponse } from "axios";
-import { toast } from "react-toastify";
 import { Link as RouterLink } from "react-router-dom";
 import { AuthResponse } from "../types/AuthResponse";
 import { useToast } from "../hooks/useToast";
+import { useAuth } from "../contexts/AuthContext";
 
 type LoginFormData = {
   email: string;
@@ -24,6 +24,7 @@ type LoginFormData = {
 
 export const Login = () => {
   const showToast = useToast();
+  const { login } = useAuth();
 
   const [form, setForm] = useState<LoginFormData>({
     email: "",
@@ -41,7 +42,7 @@ export const Login = () => {
       .then((response: AxiosResponse<AuthResponse>) => {
         const token = response.data.access_token;
         if (token) {
-          localStorage.setItem("jwt", token);
+          login(token);
           window.location.href = "/home";
         } else {
           console.error("Token not found", response.data);

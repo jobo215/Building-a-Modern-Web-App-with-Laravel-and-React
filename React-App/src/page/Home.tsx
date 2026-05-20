@@ -5,12 +5,13 @@ import { MovieCard } from "../components/MovieCard";
 import { AxiosError, AxiosResponse } from "axios";
 import { LoadingSpinner } from "../components/LoadingSpinner";
 import api from "../api/api";
-import { toast } from "react-toastify";
 import { useToast } from "../hooks/useToast";
+import { useAuth } from "../contexts/AuthContext";
 import NotFoundPage from "./NotFound";
 
 export const Home = () => {
   const showToast = useToast();
+  const { logout } = useAuth();
 
   const [movies, setMovies] = useState<CardMovie[] | null>(null);
   const [notFound, setNotFound] = useState<boolean>(false);
@@ -23,6 +24,7 @@ export const Home = () => {
       })
       .catch((error: AxiosError) => {
         if (error.status === 401) {
+          logout();
           window.location.href = "/";
           showToast("Unauthorized!", "error");
         }
@@ -31,7 +33,7 @@ export const Home = () => {
           setNotFound(true);
         }
       });
-  }, []);
+  }, [logout, showToast]);
 
   if (!movies) return <LoadingSpinner />;
   if (notFound) return <NotFoundPage />;

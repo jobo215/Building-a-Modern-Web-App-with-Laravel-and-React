@@ -1,4 +1,4 @@
-import React, { useState, useEffect, ChangeEvent, FormEvent } from "react";
+import React, { useState, useEffect, useRef, ChangeEvent, FormEvent } from "react";
 import {
   Box,
   TextField,
@@ -42,6 +42,7 @@ const EditProfile: React.FC = () => {
   const [form, setForm] = useState<EditForm | null>(null);
   const [avatarPreview, setAvatarPreview] = useState<string>("");
   const [newAvatarFile, setNewAvatarFile] = useState<File | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const mapBEUserToUser = (beUser: UserDataBE): User => {
     return {
@@ -83,6 +84,10 @@ const EditProfile: React.FC = () => {
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleAvatarButtonClick = () => {
+    fileInputRef.current?.click();
   };
 
   const handleAvatarChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -146,18 +151,16 @@ const EditProfile: React.FC = () => {
                 ? form.firstName[0]
                 : null}
             </Avatar>
-            <label htmlFor="avatar-upload">
-              <input
-                id="avatar-upload"
-                type="file"
-                accept="image/*"
-                style={{ display: "none" }}
-                onChange={handleAvatarChange}
-              />
-              <IconButton color="primary" component="span">
-                <PhotoCameraIcon />
-              </IconButton>
-            </label>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              style={{ display: "none" }}
+              onChange={handleAvatarChange}
+            />
+            <IconButton color="primary" onClick={handleAvatarButtonClick}>
+              <PhotoCameraIcon />
+            </IconButton>
           </Box>
 
           <TextField

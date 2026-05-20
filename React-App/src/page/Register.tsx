@@ -14,6 +14,7 @@ import api from "../api/api";
 import { AxiosError, AxiosResponse } from "axios";
 import { AuthResponse } from "../types/AuthResponse";
 import { useToast } from "../hooks/useToast";
+import { useAuth } from "../contexts/AuthContext";
 
 type RegistrationFormData = {
   firstName: string;
@@ -33,6 +34,7 @@ type RegistrationBackendData = {
 
 export default function RegistrationForm() {
   const showToast = useToast();
+  const { login } = useAuth();
 
   const [form, setForm] = useState<RegistrationFormData>({
     firstName: "",
@@ -65,7 +67,7 @@ export default function RegistrationForm() {
       .then((response: AxiosResponse<AuthResponse>) => {
         const token = response.data.access_token;
         if (token) {
-          localStorage.setItem("jwt", token);
+          login(token);
           window.location.href = "/home";
         } else {
           console.error("Token not found", response.data);

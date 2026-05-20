@@ -9,10 +9,11 @@ import EditProfile from "./page/EditProfile";
 import { ToastContainer } from "react-toastify";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { Favorites } from "./page/Favorites";
+import { AuthProvider } from "./contexts/AuthContext";
 
 export const App = () => {
   return (
-    <>
+    <AuthProvider>
       <NavBar />
       <BrowserRouter>
         <Routes>
@@ -29,6 +30,6 @@ export const App = () => {
         </Routes>
       </BrowserRouter>
       <ToastContainer />
-    </>
+    </AuthProvider>
   );
 };

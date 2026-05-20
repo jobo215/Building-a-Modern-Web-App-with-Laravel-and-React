@@ -13,11 +13,13 @@ import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import MovieIcon from "@mui/icons-material/Movie";
 import { AccountCircle } from "@mui/icons-material";
+import { useAuth } from "../contexts/AuthContext";
 
 const pages = ["Home", "My Favorites"];
 const settings = ["Profile", "Logout"];
 
 export const NavBar = () => {
+  const { logout } = useAuth();
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null
   );
@@ -51,7 +53,7 @@ export const NavBar = () => {
         window.location.href = "/me";
         break;
       case "Logout":
-        localStorage.removeItem("jwt");
+        logout();
         window.location.href = "/";
         break;
     }

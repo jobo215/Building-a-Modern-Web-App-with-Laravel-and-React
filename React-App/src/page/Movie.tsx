@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   Container,
   Card,
@@ -20,6 +20,7 @@ import api from "../api/api";
 import { toast } from "react-toastify";
 import NotFoundPage from "./NotFound";
 import { useToast } from "../hooks/useToast";
+import { useAuth } from "../contexts/AuthContext";
 
 type FavoriteMovie = {
   movie_id?: string;
@@ -31,6 +32,7 @@ type FavoriteMovie = {
 
 export const MoviePage = () => {
   const showToast = useToast();
+  const { logout } = useAuth();
   const { id } = useParams<{ id: string }>();
 
   const [movie, setMovie] = useState<SingleMovie | null>(null);
@@ -50,11 +52,12 @@ export const MoviePage = () => {
           showToast("Movie not found!", "error");
         }
         if (error.status === 401) {
+          logout();
           window.location.href = "/";
           showToast("Unauthorized!", "error");
         }
       });
-  }, []);
+  }, [id, logout, showToast]);
 
   const handleFavoriteClick = () => {
     if (!favorite) {
@@ -64,19 +67,20 @@ export const MoviePage = () => {
     }
   };
 
-  const getMovieAsFavorite = (): FavoriteMovie => {
-    return {
+  const movieAsFavorite = useMemo(
+    (): FavoriteMovie => ({
       movie_id: movie?.id,
       title: movie?.title,
       type: movie?.type,
       description: movie?.description,
       image: movie?.image,
-    };
-  };
+    }),
+    [movie]
+  );
 
   const handleAddFavorite = () => {
     api
-      .post("/movie/create-favorite", getMovieAsFavorite())
+      .post("/movie/create-favorite", movieAsFavorite)
       .then((response: AxiosResponse) => {
         setFavorite(response.status === 201);
       })

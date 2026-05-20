@@ -3,6 +3,7 @@ import { CardMovie } from "../types/CardMovie";
 import { AxiosError, AxiosResponse } from "axios";
 import api from "../api/api";
 import { useToast } from "../hooks/useToast";
+import { useAuth } from "../contexts/AuthContext";
 import { LoadingSpinner } from "../components/LoadingSpinner";
 import NotFoundPage from "./NotFound";
 import { Grid } from "@mui/material";
@@ -10,6 +11,7 @@ import { MovieCard } from "../components/MovieCard";
 
 export const Favorites = () => {
   const showToast = useToast();
+  const { logout } = useAuth();
 
   const [movies, setMovies] = useState<CardMovie[] | null>(null);
   const [notFound, setNotFound] = useState<boolean>(false);
@@ -22,6 +24,7 @@ export const Favorites = () => {
       })
       .catch((error: AxiosError) => {
         if (error.status === 401) {
+          logout();
           window.location.href = "/";
           showToast("Unauthorized!", "error");
         }
@@ -30,7 +33,7 @@ export const Favorites = () => {
           setNotFound(true);
         }
       });
-  }, []);
+  }, [logout, showToast]);
 
   if (!movies) return <LoadingSpinner />;
   if (notFound) return <NotFoundPage />;
